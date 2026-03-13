@@ -17,9 +17,9 @@ const MIME: Record<string, string> = {
 // Перебирает расширения и возвращает найденный файл
 export async function GET(
   _request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params
+  const { id } = await params
 
   // Ищем файл с любым из разрешённых расширений
   for (const ext of EXTENSIONS) {

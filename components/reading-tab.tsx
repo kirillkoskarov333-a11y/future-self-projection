@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react"
 import {
   BookOpen, Plus, X, Play, Square, Check, ChevronDown,
-  ChevronRight, Copy, Flame, Trophy, Clock, Trash2, Upload,
+  ChevronRight, Copy, Flame, Trophy, Clock, Trash2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -34,6 +34,29 @@ function getStatusLabel(status: Book["status"]) {
     case "completed": return "Прочитано"
     case "overdue": return "Просрочено"
   }
+}
+
+// Форматирует дату как "13 мар"
+function formatShortDate(date: Date): string {
+  return date.toLocaleDateString("ru-RU", { day: "numeric", month: "short" })
+}
+
+// Строит план чтения: для каждого дня — до какой страницы нужно дочитать
+function buildReadingPlan(book: Book): { dayOffset: number; targetPage: number; date: Date }[] {
+  const pagesPerDay = calcPagesPerDay(book)
+  const daysLeft = Math.max(calcDaysLeft(book), 1)
+  const today = new Date()
+  const plan: { dayOffset: number; targetPage: number; date: Date }[] = []
+
+  for (let i = 0; i < daysLeft; i++) {
+    const targetPage = Math.min(book.currentPage + pagesPerDay * (i + 1), book.totalPages)
+    const date = new Date(today)
+    date.setDate(date.getDate() + i)
+    plan.push({ dayOffset: i, targetPage, date })
+    if (targetPage >= book.totalPages) break
+  }
+
+  return plan
 }
 
 // ── Stats Bar ──
@@ -183,7 +206,9 @@ function AddBookForm({ onAdd }: { onAdd: (params: {
 // ── Book Cover ──
 
 function BookCover({ book, selected, onClick }: { book: Book; selected: boolean; onClick: () => void }) {
+  const [imgError, setImgError] = useState(false)
   const progress = Math.round((book.currentPage / book.totalPages) * 100)
+  const coverUrl = `https://covers.openlibrary.org/b/title/${encodeURIComponent(book.title)}-M.jpg`
 
   return (
     <button
@@ -192,16 +217,17 @@ function BookCover({ book, selected, onClick }: { book: Book; selected: boolean;
         ${selected ? "ring-2 ring-primary shadow-lg shadow-primary/20" : "ring-1 ring-border/30 hover:ring-primary/40"}`}
       style={{ aspectRatio: "2/3" }}
     >
-      {/* Обложка */}
-      {book.coverPath ? (
+      {/* Обложка — Open Library, при ошибке fallback */}
+      {!imgError ? (
         <img
-          src={`/api/reading/cover/${book.coverPath.replace(/\.[^.]+$/, "")}`}
+          src={coverUrl}
           alt={book.title}
           className="w-full h-full object-cover"
+          onError={() => setImgError(true)}
         />
       ) : (
-        // Плейсхолдер если нет обложки
-        <div className="w-full h-full bg-gradient-to-br from-secondary to-secondary/50 flex items-center justify-center p-2">
+        <div className="w-full h-full bg-gradient-to-br from-secondary to-secondary/50 flex flex-col items-center justify-center p-2 gap-1">
+          <BookOpen className="w-6 h-6 text-muted-foreground" />
           <span className="text-xs text-foreground font-medium text-center leading-tight">{book.title}</span>
         </div>
       )}
@@ -286,7 +312,6 @@ function BookDetail({
   onRemoveQuote,
   onAddSession,
   onMarkCompleted,
-  onUploadCover,
   onRemove,
 }: {
   book: Book
@@ -297,7 +322,6 @@ function BookDetail({
   onRemoveQuote: (id: string) => void
   onAddSession: (minutes: number) => void
   onMarkCompleted: () => void
-  onUploadCover: (file: File) => void
   onRemove: () => void
 }) {
   const [activePanel, setActivePanel] = useState<"notes" | "quotes" | "sessions">("notes")
@@ -307,14 +331,16 @@ function BookDetail({
   const [noteTag, setNoteTag] = useState<"note" | "insight">("note")
   const [quoteText, setQuoteText] = useState("")
   const [quotePage, setQuotePage] = useState("")
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [showFullPlan, setShowFullPlan] = useState(false)
+  const [coverError, setCoverError] = useState(false)
 
   const progress = Math.round((book.currentPage / book.totalPages) * 100)
-  const pagesPerDay = calcPagesPerDay(book)
   const daysLeft = calcDaysLeft(book)
   const totalMinutes = book.sessions.reduce((sum, s) => sum + s.durationMinutes, 0)
   const totalHours = Math.floor(totalMinutes / 60)
   const remainingMins = totalMinutes % 60
+  const readingPlan = book.status !== "completed" ? buildReadingPlan(book) : []
+  const coverUrl = `https://covers.openlibrary.org/b/title/${encodeURIComponent(book.title)}-M.jpg`
 
   function handleProgressSubmit() {
     const page = Number(progressInput)
@@ -343,33 +369,25 @@ function BookDetail({
       {/* Обложка + инфо */}
       <div className="glass-strong rounded-2xl p-5">
         <div className="flex items-start gap-4">
-          {/* Миниатюра обложки */}
+          {/* Миниатюра обложки — Open Library */}
           <div
-            className="w-20 shrink-0 rounded-lg overflow-hidden cursor-pointer border border-border/30 hover:border-primary/40 transition-colors"
+            className="w-20 shrink-0 rounded-lg overflow-hidden border border-border/30"
             style={{ aspectRatio: "2/3" }}
-            onClick={() => fileInputRef.current?.click()}
-            title="Загрузить обложку"
           >
-            {book.coverPath ? (
+            {!coverError ? (
               <img
-                src={`/api/reading/cover/${book.coverPath.replace(/\.[^.]+$/, "")}`}
+                src={coverUrl}
                 alt={book.title}
                 className="w-full h-full object-cover"
+                onError={() => setCoverError(true)}
               />
             ) : (
-              <div className="w-full h-full bg-secondary/50 flex flex-col items-center justify-center gap-1">
-                <Upload className="w-4 h-4 text-muted-foreground" />
-                <span className="text-[9px] text-muted-foreground">обложка</span>
+              <div className="w-full h-full bg-secondary/50 flex flex-col items-center justify-center gap-1 p-1">
+                <BookOpen className="w-5 h-5 text-muted-foreground" />
+                <span className="text-[8px] text-muted-foreground text-center leading-tight">{book.title}</span>
               </div>
             )}
           </div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => { if (e.target.files?.[0]) onUploadCover(e.target.files[0]) }}
-          />
 
           {/* Заголовок и прогресс */}
           <div className="flex-1 min-w-0">
@@ -390,10 +408,44 @@ function BookDetail({
                 }}
               />
             </div>
-            {/* Дневная норма */}
-            {book.status !== "completed" && (
-              <div className="text-sm font-semibold text-primary">
-                Читай {pagesPerDay} стр сегодня — успеешь за {Math.max(daysLeft, 0)} дней
+            {/* План чтения по дням */}
+            {book.status !== "completed" && readingPlan.length > 0 && (
+              <div className="flex flex-col gap-0.5">
+                {/* Сегодня — крупнее, зелёным */}
+                <div className="text-sm font-bold text-primary">
+                  Сегодня: до стр. {readingPlan[0].targetPage}
+                </div>
+                {/* Завтра */}
+                {readingPlan[1] && (
+                  <div className="text-xs text-muted-foreground/80">
+                    Завтра: до стр. {readingPlan[1].targetPage}
+                  </div>
+                )}
+                {/* Послезавтра */}
+                {readingPlan[2] && (
+                  <div className="text-xs text-muted-foreground/50">
+                    Послезавтра: до стр. {readingPlan[2].targetPage}
+                  </div>
+                )}
+                {/* Кнопка "Показать весь план" */}
+                <button
+                  onClick={() => setShowFullPlan(!showFullPlan)}
+                  className="text-[10px] text-muted-foreground hover:text-foreground mt-1 text-left underline underline-offset-2 transition-colors"
+                >
+                  {showFullPlan ? "Скрыть план" : "Показать весь план"}
+                </button>
+                {showFullPlan && (
+                  <div className="mt-2 flex flex-col gap-1 max-h-40 overflow-y-auto pr-1">
+                    {readingPlan.map((entry) => (
+                      <div key={entry.dayOffset} className="flex items-center justify-between text-[11px]">
+                        <span className="text-muted-foreground">
+                          День {entry.dayOffset + 1} ({formatShortDate(entry.date)})
+                        </span>
+                        <span className="font-mono text-foreground">→ стр. {entry.targetPage}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
             {book.status === "completed" && (
@@ -684,7 +736,6 @@ export function ReadingTab() {
                   onRemoveQuote={(id) => store.removeQuote(selectedBook.id, id)}
                   onAddSession={(mins) => store.addSession(selectedBook.id, mins)}
                   onMarkCompleted={() => store.markCompleted(selectedBook.id)}
-                  onUploadCover={(file) => store.uploadCover(selectedBook.id, file)}
                   onRemove={() => { store.removeBook(selectedBook.id); setSelectedBookId(null) }}
                 />
               </div>
@@ -729,7 +780,6 @@ export function ReadingTab() {
                 onRemoveQuote={(id) => store.removeQuote(selectedBook.id, id)}
                 onAddSession={(mins) => store.addSession(selectedBook.id, mins)}
                 onMarkCompleted={() => store.markCompleted(selectedBook.id)}
-                onUploadCover={(file) => store.uploadCover(selectedBook.id, file)}
                 onRemove={() => { store.removeBook(selectedBook.id); setSelectedBookId(null) }}
               />
             </div>
