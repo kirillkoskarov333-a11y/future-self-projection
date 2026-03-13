@@ -208,9 +208,9 @@ function AddBookForm({ onAdd }: { onAdd: (params: {
 function BookCover({ book, selected, onClick }: { book: Book; selected: boolean; onClick: () => void }) {
   const [imgError, setImgError] = useState(false)
   const progress = Math.round((book.currentPage / book.totalPages) * 100)
-  // Если пользователь загрузил обложку — используем её, иначе Open Library
+  // base64 data URL используем напрямую, иначе Open Library
   const coverUrl = book.coverPath
-    ? `/api/reading/cover/${book.coverPath.replace(/\.[^.]+$/, "")}`
+    ? book.coverPath
     : `https://covers.openlibrary.org/b/title/${encodeURIComponent(book.title)}-M.jpg`
 
   return (
@@ -351,9 +351,9 @@ function BookDetail({
   const totalHours = Math.floor(totalMinutes / 60)
   const remainingMins = totalMinutes % 60
   const readingPlan = book.status !== "completed" ? buildReadingPlan(book) : []
-  // Приоритет: загруженная обложка → Open Library → fallback
+  // base64 data URL используем напрямую, иначе Open Library
   const coverUrl = book.coverPath
-    ? `/api/reading/cover/${book.coverPath.replace(/\.[^.]+$/, "")}`
+    ? book.coverPath
     : `https://covers.openlibrary.org/b/title/${encodeURIComponent(book.title)}-M.jpg`
 
   function handleProgressSubmit() {
