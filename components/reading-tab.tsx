@@ -418,7 +418,7 @@ function BookDetail({
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/*"
+              accept=".jpg,.jpeg,.png,.webp,.gif,image/*"
               className="hidden"
               onChange={(e) => {
                 if (e.target.files?.[0]) {
