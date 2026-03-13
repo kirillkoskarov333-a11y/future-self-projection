@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useMemo, useEffect } from "react"
 import type { Book, BookNote, BookQuote, ReadingSession } from "@/lib/types"
-import { fetchReadingState, saveReadingState, uploadBookCover } from "@/lib/api-client"
+import { fetchReadingState, saveReadingState } from "@/lib/api-client"
 
 function generateId() {
   return Math.random().toString(36).substring(2, 9)
@@ -105,14 +105,15 @@ export function useReadingStore() {
     }))
   }, [])
 
-  const setCover = useCallback((id: string, coverPath: string) => {
-    setBooks((prev) => prev.map((b) => b.id === id ? { ...b, coverPath } : b))
+  // Конвертирует файл в base64 и сохраняет прямо в книгу — без API загрузки
+  const uploadCover = useCallback((id: string, file: File) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      const dataUrl = reader.result as string
+      setBooks((prev) => prev.map((b) => b.id === id ? { ...b, coverPath: dataUrl } : b))
+    }
+    reader.readAsDataURL(file)
   }, [])
-
-  const uploadCover = useCallback(async (id: string, file: File) => {
-    const filename = await uploadBookCover(id, file)
-    setCover(id, filename)
-  }, [setCover])
 
   const addNote = useCallback((bookId: string, text: string, tag: "note" | "insight") => {
     const note: BookNote = {
