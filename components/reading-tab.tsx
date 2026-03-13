@@ -217,13 +217,18 @@ function BookCover({ book, selected, onClick }: { book: Book; selected: boolean;
         ${selected ? "ring-2 ring-primary shadow-lg shadow-primary/20" : "ring-1 ring-border/30 hover:ring-primary/40"}`}
       style={{ aspectRatio: "2/3" }}
     >
-      {/* Обложка — Open Library, при ошибке fallback */}
+      {/* Обложка — Open Library, fallback если не найдена или 1px-заглушка */}
       {!imgError ? (
         <img
           src={coverUrl}
           alt={book.title}
           className="w-full h-full object-cover"
           onError={() => setImgError(true)}
+          onLoad={(e) => {
+            // Open Library возвращает 1×1 пиксель если обложки нет
+            const img = e.currentTarget
+            if (img.naturalWidth <= 1) setImgError(true)
+          }}
         />
       ) : (
         <div className="w-full h-full bg-gradient-to-br from-secondary to-secondary/50 flex flex-col items-center justify-center p-2 gap-1">
@@ -380,6 +385,9 @@ function BookDetail({
                 alt={book.title}
                 className="w-full h-full object-cover"
                 onError={() => setCoverError(true)}
+                onLoad={(e) => {
+                  if (e.currentTarget.naturalWidth <= 1) setCoverError(true)
+                }}
               />
             ) : (
               <div className="w-full h-full bg-secondary/50 flex flex-col items-center justify-center gap-1 p-1">
