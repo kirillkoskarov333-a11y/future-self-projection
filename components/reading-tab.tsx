@@ -753,7 +753,7 @@ export function ReadingTab() {
 
           <div className="flex gap-4">
             {/* Сетка книг (Steam-like) */}
-            <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-3 flex-shrink-0">
+            <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 gap-2 flex-shrink-0" style={{ gridAutoRows: "auto", maxWidth: "320px" }}>
               {store.activeBooks.map((book) => (
                 <BookCover
                   key={book.id}
