@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react"
 import {
   BookOpen, Plus, X, Play, Square, Check, ChevronDown,
-  ChevronRight, Copy, Flame, Trophy, Clock, Trash2,
+  ChevronRight, Copy, Flame, Trophy, Clock, Trash2, Upload,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -208,7 +208,10 @@ function AddBookForm({ onAdd }: { onAdd: (params: {
 function BookCover({ book, selected, onClick }: { book: Book; selected: boolean; onClick: () => void }) {
   const [imgError, setImgError] = useState(false)
   const progress = Math.round((book.currentPage / book.totalPages) * 100)
-  const coverUrl = `https://covers.openlibrary.org/b/title/${encodeURIComponent(book.title)}-M.jpg`
+  // Если пользователь загрузил обложку — используем её, иначе Open Library
+  const coverUrl = book.coverPath
+    ? `/api/reading/cover/${book.coverPath.replace(/\.[^.]+$/, "")}`
+    : `https://covers.openlibrary.org/b/title/${encodeURIComponent(book.title)}-M.jpg`
 
   return (
     <button
@@ -317,6 +320,7 @@ function BookDetail({
   onRemoveQuote,
   onAddSession,
   onMarkCompleted,
+  onUploadCover,
   onRemove,
 }: {
   book: Book
@@ -327,6 +331,7 @@ function BookDetail({
   onRemoveQuote: (id: string) => void
   onAddSession: (minutes: number) => void
   onMarkCompleted: () => void
+  onUploadCover: (file: File) => void
   onRemove: () => void
 }) {
   const [activePanel, setActivePanel] = useState<"notes" | "quotes" | "sessions">("notes")
@@ -338,6 +343,7 @@ function BookDetail({
   const [quotePage, setQuotePage] = useState("")
   const [showFullPlan, setShowFullPlan] = useState(false)
   const [coverError, setCoverError] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const progress = Math.round((book.currentPage / book.totalPages) * 100)
   const daysLeft = calcDaysLeft(book)
@@ -345,7 +351,10 @@ function BookDetail({
   const totalHours = Math.floor(totalMinutes / 60)
   const remainingMins = totalMinutes % 60
   const readingPlan = book.status !== "completed" ? buildReadingPlan(book) : []
-  const coverUrl = `https://covers.openlibrary.org/b/title/${encodeURIComponent(book.title)}-M.jpg`
+  // Приоритет: загруженная обложка → Open Library → fallback
+  const coverUrl = book.coverPath
+    ? `/api/reading/cover/${book.coverPath.replace(/\.[^.]+$/, "")}`
+    : `https://covers.openlibrary.org/b/title/${encodeURIComponent(book.title)}-M.jpg`
 
   function handleProgressSubmit() {
     const page = Number(progressInput)
@@ -374,27 +383,50 @@ function BookDetail({
       {/* Обложка + инфо */}
       <div className="glass-strong rounded-2xl p-5">
         <div className="flex items-start gap-4">
-          {/* Миниатюра обложки — Open Library */}
-          <div
-            className="w-20 shrink-0 rounded-lg overflow-hidden border border-border/30"
-            style={{ aspectRatio: "2/3" }}
-          >
-            {!coverError ? (
-              <img
-                src={coverUrl}
-                alt={book.title}
-                className="w-full h-full object-cover"
-                onError={() => setCoverError(true)}
-                onLoad={(e) => {
-                  if (e.currentTarget.naturalWidth <= 1) setCoverError(true)
-                }}
-              />
-            ) : (
-              <div className="w-full h-full bg-secondary/50 flex flex-col items-center justify-center gap-1 p-1">
-                <BookOpen className="w-5 h-5 text-muted-foreground" />
-                <span className="text-[8px] text-muted-foreground text-center leading-tight">{book.title}</span>
-              </div>
-            )}
+          {/* Миниатюра обложки — кликабельна для загрузки */}
+          <div className="flex flex-col items-center gap-1 shrink-0">
+            <div
+              className="w-20 rounded-lg overflow-hidden border border-border/30 hover:border-primary/50 cursor-pointer transition-colors group"
+              style={{ aspectRatio: "2/3" }}
+              onClick={() => fileInputRef.current?.click()}
+              title="Нажми чтобы загрузить обложку"
+            >
+              {!coverError ? (
+                <img
+                  src={coverUrl}
+                  alt={book.title}
+                  className="w-full h-full object-cover"
+                  onError={() => setCoverError(true)}
+                  onLoad={(e) => {
+                    // Open Library возвращает 1×1 пиксель если обложки нет
+                    if (!book.coverPath && e.currentTarget.naturalWidth <= 1) setCoverError(true)
+                  }}
+                />
+              ) : (
+                <div className="w-full h-full bg-secondary/50 flex flex-col items-center justify-center gap-1 p-1">
+                  <BookOpen className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                  <span className="text-[8px] text-muted-foreground text-center leading-tight">{book.title}</span>
+                </div>
+              )}
+            </div>
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="text-[9px] text-muted-foreground hover:text-primary transition-colors flex items-center gap-0.5"
+            >
+              <Upload className="w-2.5 h-2.5" /> загрузить
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                if (e.target.files?.[0]) {
+                  onUploadCover(e.target.files[0])
+                  setCoverError(false) // сбросить ошибку после загрузки
+                }
+              }}
+            />
           </div>
 
           {/* Заголовок и прогресс */}
@@ -744,6 +776,7 @@ export function ReadingTab() {
                   onRemoveQuote={(id) => store.removeQuote(selectedBook.id, id)}
                   onAddSession={(mins) => store.addSession(selectedBook.id, mins)}
                   onMarkCompleted={() => store.markCompleted(selectedBook.id)}
+                  onUploadCover={(file) => store.uploadCover(selectedBook.id, file)}
                   onRemove={() => { store.removeBook(selectedBook.id); setSelectedBookId(null) }}
                 />
               </div>
@@ -788,6 +821,7 @@ export function ReadingTab() {
                 onRemoveQuote={(id) => store.removeQuote(selectedBook.id, id)}
                 onAddSession={(mins) => store.addSession(selectedBook.id, mins)}
                 onMarkCompleted={() => store.markCompleted(selectedBook.id)}
+                onUploadCover={(file) => store.uploadCover(selectedBook.id, file)}
                 onRemove={() => { store.removeBook(selectedBook.id); setSelectedBookId(null) }}
               />
             </div>
