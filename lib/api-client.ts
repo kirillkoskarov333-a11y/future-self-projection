@@ -1,3 +1,8 @@
+/**
+ * API client — now uses IndexedDB instead of HTTP fetch
+ * Same interface as before, so hooks don't need any changes
+ */
+
 import type {
   BudgetState,
   DayPlannerState,
@@ -6,105 +11,75 @@ import type {
   LearningState,
   ReadingState,
 } from "@/lib/state-types"
+import { readSection, writeSection } from "@/lib/storage-client"
 
-async function parseJson<T>(response: Response): Promise<T> {
-  const body = (await response.json()) as T
-  return body
+// === Habits ===
+export async function fetchHabitsState(): Promise<HabitsState | null> {
+  const data = await readSection("habits")
+  return data ?? null
 }
 
-async function request<T>(url: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(url, {
-    cache: "no-store",
-    ...init,
-  })
-
-  if (!response.ok) {
-    throw new Error(`Request failed: ${response.status}`)
-  }
-
-  return parseJson<T>(response)
+export async function saveHabitsState(payload: HabitsState): Promise<void> {
+  await writeSection("habits", payload)
 }
 
-async function save(url: string, payload: unknown) {
-  await request<{ ok: boolean }>(url, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  })
+// === Goals ===
+export async function fetchGoalsState(): Promise<GoalsState | null> {
+  const data = await readSection("goals")
+  return data ?? null
 }
 
-export async function fetchHabitsState() {
-  const response = await request<{ data: HabitsState | null }>("/api/habits")
-  return response.data
+export async function saveGoalsState(payload: GoalsState): Promise<void> {
+  await writeSection("goals", payload)
 }
 
-export async function saveHabitsState(payload: HabitsState) {
-  await save("/api/habits", payload)
+// === Day Planner ===
+export async function fetchDayPlannerState(): Promise<DayPlannerState | null> {
+  const data = await readSection("dayPlanner")
+  return data ?? null
 }
 
-export async function fetchGoalsState() {
-  const response = await request<{ data: GoalsState | null }>("/api/goals")
-  return response.data
+export async function saveDayPlannerState(payload: DayPlannerState): Promise<void> {
+  await writeSection("dayPlanner", payload)
 }
 
-export async function saveGoalsState(payload: GoalsState) {
-  await save("/api/goals", payload)
+// === Budget ===
+export async function fetchBudgetState(): Promise<BudgetState | null> {
+  const data = await readSection("budget")
+  return data ?? null
 }
 
-export async function fetchDayPlannerState() {
-  const response = await request<{ data: DayPlannerState | null }>(
-    "/api/day-planner"
-  )
-  return response.data
+export async function saveBudgetState(payload: BudgetState): Promise<void> {
+  await writeSection("budget", payload)
 }
 
-export async function saveDayPlannerState(payload: DayPlannerState) {
-  await save("/api/day-planner", payload)
+// === Learning ===
+export async function fetchLearningState(): Promise<LearningState | null> {
+  const data = await readSection("learning")
+  return data ?? null
 }
 
-export async function fetchBudgetState() {
-  const response = await request<{ data: BudgetState | null }>("/api/budget")
-  return response.data
+export async function saveLearningState(payload: LearningState): Promise<void> {
+  await writeSection("learning", payload)
 }
 
-export async function saveBudgetState(payload: BudgetState) {
-  await save("/api/budget", payload)
+// === Reading ===
+export async function fetchReadingState(): Promise<ReadingState | null> {
+  const data = await readSection("reading")
+  return data ?? null
 }
 
-export async function fetchLearningState() {
-  const response = await request<{ data: LearningState | null }>("/api/learning")
-  return response.data
+export async function saveReadingState(payload: ReadingState): Promise<void> {
+  await writeSection("reading", payload)
 }
 
-export async function saveLearningState(payload: LearningState) {
-  await save("/api/learning", payload)
-}
-
-// Загрузить данные о книгах
-export async function fetchReadingState() {
-  const response = await request<{ data: ReadingState | null }>("/api/reading")
-  return response.data
-}
-
-// Сохранить данные о книгах
-export async function saveReadingState(payload: ReadingState) {
-  await save("/api/reading", payload)
-}
-
-// Загрузить обложку книги, вернуть имя файла
+// Book cover upload — now converts to Base64 data URL directly
+// No server needed, the data URL is stored in the book's coverPath field
 export async function uploadBookCover(bookId: string, file: File): Promise<string> {
-  const formData = new FormData()
-  formData.append("bookId", bookId)
-  formData.append("file", file)
-
-  const response = await fetch("/api/reading/cover", {
-    method: "POST",
-    body: formData,
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result as string) // returns data:image/...;base64,...
+    reader.onerror = () => reject(new Error("Failed to read cover file"))
+    reader.readAsDataURL(file)
   })
-
-  if (!response.ok) throw new Error("Failed to upload cover")
-  const data = await response.json() as { filename: string }
-  return data.filename
 }

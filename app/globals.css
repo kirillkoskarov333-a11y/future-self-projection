@@ -1,0 +1,709 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* ===== DEFAULT: Neon Dark (current theme) ===== */
+  :root,
+  [data-theme="neon-dark"] {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 93%;
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 93%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 93%;
+    --primary: 152 80% 50%;
+    --primary-foreground: 0 0% 4%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 93%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 152 80% 50%;
+    --accent-foreground: 0 0% 4%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14%;
+    --input: 0 0% 14%;
+    --ring: 152 80% 50%;
+    --chart-1: 152 80% 50%;
+    --chart-2: 152 60% 40%;
+    --chart-3: 152 40% 30%;
+    --chart-4: 0 0% 40%;
+    --chart-5: 0 0% 55%;
+    --radius: 1rem;
+    --theme-glow: 34 197 94;
+    --glass-bg: 255 255 255;
+    --glass-opacity: 0.04;
+    --glass-strong-opacity: 0.07;
+    --glass-border-opacity: 0.06;
+    --glass-strong-border-opacity: 0.1;
+    --card-elevated-opacity: 0.06;
+    --card-strong-opacity: 0.10;
+    --card-border-opacity: 0.08;
+    --card-strong-border-opacity: 0.12;
+    --card-shadow-opacity: 0.30;
+    --card-shadow-strong-opacity: 0.40;
+    --surface-1: 0 0% 4%;
+    --surface-2: 0 0% 8%;
+    --surface-3: 0 0% 12%;
+  }
+
+  /* ===== LIGHT ===== */
+  [data-theme="light"] {
+    --background: 220 20% 96%;
+    --foreground: 220 15% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 15%;
+    --primary: 152 65% 40%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 15% 91%;
+    --secondary-foreground: 220 15% 20%;
+    --muted: 210 15% 91%;
+    --muted-foreground: 220 10% 45%;
+    --accent: 152 65% 40%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 13% 87%;
+    --input: 220 13% 87%;
+    --ring: 152 65% 40%;
+    --chart-1: 152 65% 40%;
+    --chart-2: 152 50% 50%;
+    --chart-3: 152 35% 60%;
+    --chart-4: 220 10% 65%;
+    --chart-5: 220 10% 75%;
+    --radius: 1rem;
+    --theme-glow: 34 160 80;
+    --glass-bg: 0 0 0;
+    --glass-opacity: 0.02;
+    --glass-strong-opacity: 0.04;
+    --glass-border-opacity: 0.06;
+    --glass-strong-border-opacity: 0.08;
+    --card-elevated-opacity: 0.03;
+    --card-strong-opacity: 0.05;
+    --card-border-opacity: 0.08;
+    --card-strong-border-opacity: 0.11;
+    --card-shadow-opacity: 0.08;
+    --card-shadow-strong-opacity: 0.14;
+    --surface-1: 220 20% 96%;
+    --surface-2: 0 0% 100%;
+    --surface-3: 210 15% 95%;
+  }
+
+  /* ===== OCEAN BLUE ===== */
+  [data-theme="ocean"] {
+    --background: 215 30% 5%;
+    --foreground: 210 20% 93%;
+    --card: 215 25% 9%;
+    --card-foreground: 210 20% 93%;
+    --popover: 215 25% 9%;
+    --popover-foreground: 210 20% 93%;
+    --primary: 200 85% 55%;
+    --primary-foreground: 215 30% 5%;
+    --secondary: 215 20% 14%;
+    --secondary-foreground: 210 20% 93%;
+    --muted: 215 20% 14%;
+    --muted-foreground: 210 15% 55%;
+    --accent: 200 85% 55%;
+    --accent-foreground: 215 30% 5%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 215 20% 16%;
+    --input: 215 20% 16%;
+    --ring: 200 85% 55%;
+    --chart-1: 200 85% 55%;
+    --chart-2: 190 70% 45%;
+    --chart-3: 210 60% 35%;
+    --chart-4: 215 15% 40%;
+    --chart-5: 215 10% 55%;
+    --radius: 1rem;
+    --theme-glow: 56 189 248;
+    --glass-bg: 180 210 255;
+    --glass-opacity: 0.04;
+    --glass-strong-opacity: 0.07;
+    --glass-border-opacity: 0.08;
+    --glass-strong-border-opacity: 0.12;
+    --card-elevated-opacity: 0.07;
+    --card-strong-opacity: 0.11;
+    --card-border-opacity: 0.11;
+    --card-strong-border-opacity: 0.15;
+    --card-shadow-opacity: 0.30;
+    --card-shadow-strong-opacity: 0.40;
+    --surface-1: 215 30% 5%;
+    --surface-2: 215 25% 9%;
+    --surface-3: 215 20% 14%;
+  }
+
+  /* ===== SUNSET AMBER ===== */
+  [data-theme="sunset"] {
+    --background: 20 20% 4%;
+    --foreground: 30 15% 93%;
+    --card: 20 18% 8%;
+    --card-foreground: 30 15% 93%;
+    --popover: 20 18% 8%;
+    --popover-foreground: 30 15% 93%;
+    --primary: 35 95% 55%;
+    --primary-foreground: 20 20% 5%;
+    --secondary: 20 15% 12%;
+    --secondary-foreground: 30 15% 93%;
+    --muted: 20 15% 12%;
+    --muted-foreground: 20 10% 55%;
+    --accent: 35 95% 55%;
+    --accent-foreground: 20 20% 5%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 20 15% 15%;
+    --input: 20 15% 15%;
+    --ring: 35 95% 55%;
+    --chart-1: 35 95% 55%;
+    --chart-2: 25 80% 45%;
+    --chart-3: 15 60% 35%;
+    --chart-4: 20 10% 40%;
+    --chart-5: 20 10% 55%;
+    --radius: 1rem;
+    --theme-glow: 245 180 50;
+    --glass-bg: 255 200 150;
+    --glass-opacity: 0.04;
+    --glass-strong-opacity: 0.07;
+    --glass-border-opacity: 0.08;
+    --glass-strong-border-opacity: 0.12;
+    --card-elevated-opacity: 0.07;
+    --card-strong-opacity: 0.11;
+    --card-border-opacity: 0.11;
+    --card-strong-border-opacity: 0.15;
+    --card-shadow-opacity: 0.30;
+    --card-shadow-strong-opacity: 0.40;
+    --surface-1: 20 20% 4%;
+    --surface-2: 20 18% 8%;
+    --surface-3: 20 15% 12%;
+  }
+
+  /* ===== ROSE ===== */
+  [data-theme="rose"] {
+    --background: 340 15% 5%;
+    --foreground: 340 10% 93%;
+    --card: 340 12% 9%;
+    --card-foreground: 340 10% 93%;
+    --popover: 340 12% 9%;
+    --popover-foreground: 340 10% 93%;
+    --primary: 340 75% 60%;
+    --primary-foreground: 340 15% 5%;
+    --secondary: 340 10% 13%;
+    --secondary-foreground: 340 10% 93%;
+    --muted: 340 10% 13%;
+    --muted-foreground: 340 8% 55%;
+    --accent: 340 75% 60%;
+    --accent-foreground: 340 15% 5%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 340 10% 16%;
+    --input: 340 10% 16%;
+    --ring: 340 75% 60%;
+    --chart-1: 340 75% 60%;
+    --chart-2: 330 60% 50%;
+    --chart-3: 350 50% 40%;
+    --chart-4: 340 8% 40%;
+    --chart-5: 340 5% 55%;
+    --radius: 1rem;
+    --theme-glow: 230 100 140;
+    --glass-bg: 255 200 220;
+    --glass-opacity: 0.04;
+    --glass-strong-opacity: 0.07;
+    --glass-border-opacity: 0.08;
+    --glass-strong-border-opacity: 0.12;
+    --card-elevated-opacity: 0.07;
+    --card-strong-opacity: 0.11;
+    --card-border-opacity: 0.11;
+    --card-strong-border-opacity: 0.15;
+    --card-shadow-opacity: 0.30;
+    --card-shadow-strong-opacity: 0.40;
+    --surface-1: 340 15% 5%;
+    --surface-2: 340 12% 9%;
+    --surface-3: 340 10% 13%;
+  }
+
+  /* ===== EMERALD FOREST ===== */
+  [data-theme="forest"] {
+    --background: 160 25% 3%;
+    --foreground: 140 10% 92%;
+    --card: 160 20% 7%;
+    --card-foreground: 140 10% 92%;
+    --popover: 160 20% 7%;
+    --popover-foreground: 140 10% 92%;
+    --primary: 160 70% 45%;
+    --primary-foreground: 160 25% 4%;
+    --secondary: 160 15% 11%;
+    --secondary-foreground: 140 10% 92%;
+    --muted: 160 15% 11%;
+    --muted-foreground: 160 8% 50%;
+    --accent: 160 70% 45%;
+    --accent-foreground: 160 25% 4%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 160 12% 14%;
+    --input: 160 12% 14%;
+    --ring: 160 70% 45%;
+    --chart-1: 160 70% 45%;
+    --chart-2: 150 55% 38%;
+    --chart-3: 170 45% 30%;
+    --chart-4: 160 8% 38%;
+    --chart-5: 160 5% 52%;
+    --radius: 1rem;
+    --theme-glow: 30 170 100;
+    --glass-bg: 180 230 200;
+    --glass-opacity: 0.04;
+    --glass-strong-opacity: 0.07;
+    --glass-border-opacity: 0.07;
+    --glass-strong-border-opacity: 0.11;
+    --card-elevated-opacity: 0.07;
+    --card-strong-opacity: 0.11;
+    --card-border-opacity: 0.10;
+    --card-strong-border-opacity: 0.14;
+    --card-shadow-opacity: 0.28;
+    --card-shadow-strong-opacity: 0.38;
+    --surface-1: 160 25% 3%;
+    --surface-2: 160 20% 7%;
+    --surface-3: 160 15% 11%;
+  }
+
+  /* ===== CYBER PURPLE ===== */
+  [data-theme="cyber"] {
+    --background: 270 20% 4%;
+    --foreground: 260 10% 93%;
+    --card: 270 18% 8%;
+    --card-foreground: 260 10% 93%;
+    --popover: 270 18% 8%;
+    --popover-foreground: 260 10% 93%;
+    --primary: 270 85% 65%;
+    --primary-foreground: 270 20% 5%;
+    --secondary: 270 12% 12%;
+    --secondary-foreground: 260 10% 93%;
+    --muted: 270 12% 12%;
+    --muted-foreground: 270 8% 55%;
+    --accent: 270 85% 65%;
+    --accent-foreground: 270 20% 5%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 270 12% 15%;
+    --input: 270 12% 15%;
+    --ring: 270 85% 65%;
+    --chart-1: 270 85% 65%;
+    --chart-2: 260 65% 55%;
+    --chart-3: 280 55% 45%;
+    --chart-4: 270 8% 40%;
+    --chart-5: 270 5% 55%;
+    --radius: 1rem;
+    --theme-glow: 160 100 240;
+    --glass-bg: 200 180 255;
+    --glass-opacity: 0.04;
+    --glass-strong-opacity: 0.07;
+    --glass-border-opacity: 0.08;
+    --glass-strong-border-opacity: 0.12;
+    --card-elevated-opacity: 0.07;
+    --card-strong-opacity: 0.11;
+    --card-border-opacity: 0.11;
+    --card-strong-border-opacity: 0.15;
+    --card-shadow-opacity: 0.30;
+    --card-shadow-strong-opacity: 0.40;
+    --surface-1: 270 20% 4%;
+    --surface-2: 270 18% 8%;
+    --surface-3: 270 12% 12%;
+  }
+
+  /* ===== ARCTIC ICE ===== */
+  [data-theme="arctic"] {
+    --background: 200 30% 5%;
+    --foreground: 180 15% 93%;
+    --card: 200 25% 8%;
+    --card-foreground: 180 15% 93%;
+    --popover: 200 25% 8%;
+    --popover-foreground: 180 15% 93%;
+    --primary: 175 70% 58%;
+    --primary-foreground: 200 30% 5%;
+    --secondary: 200 18% 12%;
+    --secondary-foreground: 180 15% 93%;
+    --muted: 200 18% 12%;
+    --muted-foreground: 200 12% 52%;
+    --accent: 175 70% 58%;
+    --accent-foreground: 200 30% 5%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 200 18% 15%;
+    --input: 200 18% 15%;
+    --ring: 175 70% 58%;
+    --chart-1: 175 70% 58%;
+    --chart-2: 190 60% 48%;
+    --chart-3: 165 50% 38%;
+    --chart-4: 200 10% 40%;
+    --chart-5: 200 8% 55%;
+    --radius: 1rem;
+    --theme-glow: 92 224 214;
+    --glass-bg: 160 220 230;
+    --glass-opacity: 0.04;
+    --glass-strong-opacity: 0.07;
+    --glass-border-opacity: 0.08;
+    --glass-strong-border-opacity: 0.12;
+    --card-elevated-opacity: 0.07;
+    --card-strong-opacity: 0.11;
+    --card-border-opacity: 0.11;
+    --card-strong-border-opacity: 0.15;
+    --card-shadow-opacity: 0.30;
+    --card-shadow-strong-opacity: 0.40;
+    --surface-1: 200 30% 5%;
+    --surface-2: 200 25% 8%;
+    --surface-3: 200 18% 12%;
+  }
+
+  /* ===== BLOOD MOON ===== */
+  [data-theme="blood"] {
+    --background: 0 20% 4%;
+    --foreground: 0 10% 92%;
+    --card: 0 16% 7%;
+    --card-foreground: 0 10% 92%;
+    --popover: 0 16% 7%;
+    --popover-foreground: 0 10% 92%;
+    --primary: 0 72% 52%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 12% 11%;
+    --secondary-foreground: 0 10% 92%;
+    --muted: 0 12% 11%;
+    --muted-foreground: 0 8% 50%;
+    --accent: 0 72% 52%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 30 90% 55%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 12% 14%;
+    --input: 0 12% 14%;
+    --ring: 0 72% 52%;
+    --chart-1: 0 72% 52%;
+    --chart-2: 10 60% 44%;
+    --chart-3: 350 50% 36%;
+    --chart-4: 0 8% 38%;
+    --chart-5: 0 5% 52%;
+    --radius: 1rem;
+    --theme-glow: 229 62 62;
+    --glass-bg: 255 160 160;
+    --glass-opacity: 0.04;
+    --glass-strong-opacity: 0.07;
+    --glass-border-opacity: 0.08;
+    --glass-strong-border-opacity: 0.12;
+    --card-elevated-opacity: 0.07;
+    --card-strong-opacity: 0.11;
+    --card-border-opacity: 0.11;
+    --card-strong-border-opacity: 0.15;
+    --card-shadow-opacity: 0.32;
+    --card-shadow-strong-opacity: 0.42;
+    --surface-1: 0 20% 4%;
+    --surface-2: 0 16% 7%;
+    --surface-3: 0 12% 11%;
+  }
+
+  /* ===== ROYAL GOLD ===== */
+  [data-theme="gold"] {
+    --background: 35 18% 3%;
+    --foreground: 40 12% 92%;
+    --card: 35 15% 7%;
+    --card-foreground: 40 12% 92%;
+    --popover: 35 15% 7%;
+    --popover-foreground: 40 12% 92%;
+    --primary: 42 70% 52%;
+    --primary-foreground: 35 18% 4%;
+    --secondary: 35 12% 11%;
+    --secondary-foreground: 40 12% 92%;
+    --muted: 35 12% 11%;
+    --muted-foreground: 35 8% 48%;
+    --accent: 42 70% 52%;
+    --accent-foreground: 35 18% 4%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 35 12% 14%;
+    --input: 35 12% 14%;
+    --ring: 42 70% 52%;
+    --chart-1: 42 70% 52%;
+    --chart-2: 36 60% 44%;
+    --chart-3: 48 50% 36%;
+    --chart-4: 35 8% 38%;
+    --chart-5: 35 5% 52%;
+    --radius: 1rem;
+    --theme-glow: 212 167 64;
+    --glass-bg: 230 210 170;
+    --glass-opacity: 0.04;
+    --glass-strong-opacity: 0.07;
+    --glass-border-opacity: 0.08;
+    --glass-strong-border-opacity: 0.12;
+    --card-elevated-opacity: 0.07;
+    --card-strong-opacity: 0.11;
+    --card-border-opacity: 0.11;
+    --card-strong-border-opacity: 0.15;
+    --card-shadow-opacity: 0.30;
+    --card-shadow-strong-opacity: 0.40;
+    --surface-1: 35 18% 3%;
+    --surface-2: 35 15% 7%;
+    --surface-3: 35 12% 11%;
+  }
+
+  /* ===== MIDNIGHT ===== */
+  [data-theme="midnight"] {
+    --background: 230 25% 4%;
+    --foreground: 220 15% 93%;
+    --card: 230 22% 7%;
+    --card-foreground: 220 15% 93%;
+    --popover: 230 22% 7%;
+    --popover-foreground: 220 15% 93%;
+    --primary: 220 75% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 230 15% 11%;
+    --secondary-foreground: 220 15% 93%;
+    --muted: 230 15% 11%;
+    --muted-foreground: 230 10% 50%;
+    --accent: 220 75% 60%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 230 15% 14%;
+    --input: 230 15% 14%;
+    --ring: 220 75% 60%;
+    --chart-1: 220 75% 60%;
+    --chart-2: 210 60% 50%;
+    --chart-3: 230 50% 40%;
+    --chart-4: 230 8% 38%;
+    --chart-5: 230 5% 52%;
+    --radius: 1rem;
+    --theme-glow: 80 130 230;
+    --glass-bg: 160 180 240;
+    --glass-opacity: 0.04;
+    --glass-strong-opacity: 0.07;
+    --glass-border-opacity: 0.08;
+    --glass-strong-border-opacity: 0.12;
+    --card-elevated-opacity: 0.07;
+    --card-strong-opacity: 0.11;
+    --card-border-opacity: 0.11;
+    --card-strong-border-opacity: 0.15;
+    --card-shadow-opacity: 0.30;
+    --card-shadow-strong-opacity: 0.40;
+    --surface-1: 230 25% 4%;
+    --surface-2: 230 22% 7%;
+    --surface-3: 230 15% 11%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .glass {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border) / 0.6);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, var(--card-shadow-opacity, 0.18)), 0 0.5px 0 rgba(var(--glass-bg), 0.03) inset;
+  }
+  .glass-strong {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border) / 0.8);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, var(--card-shadow-strong-opacity, 0.28)), 0 1px 0 rgba(var(--glass-bg), 0.04) inset;
+  }
+  .neon-glow {
+    box-shadow: 0 0 12px rgba(var(--theme-glow), 0.3), 0 0 4px rgba(var(--theme-glow), 0.2);
+  }
+  .neon-text {
+    text-shadow: 0 0 8px rgba(var(--theme-glow), 0.4);
+  }
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 2px;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--card));
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground));
+}
+
+/* Light theme scrollbar adjustments */
+[data-theme="light"] ::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+
+/* Checkbox animation */
+@keyframes checkmark {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-checkmark {
+  animation: checkmark 0.3s ease-out forwards;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 4px rgba(var(--theme-glow), 0.2); }
+  50% { box-shadow: 0 0 16px rgba(var(--theme-glow), 0.5); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes fill-progress {
+  from { width: 0%; }
+}
+
+.animate-fill {
+  animation: fill-progress 1s ease-out forwards;
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.4s ease-out forwards;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(8px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-count-up {
+  animation: count-up 0.6s ease-out forwards;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 25%, rgba(var(--theme-glow), 0.06) 50%, transparent 75%);
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out forwards;
+}
+
+/* Slide from left/right — for day switching */
+@keyframes slide-from-left {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slide-from-right {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-slide-from-left {
+  animation: slide-from-left 0.3s ease-out forwards;
+}
+.animate-slide-from-right {
+  animation: slide-from-right 0.3s ease-out forwards;
+}
+
+/* Bar grow — for weekly summary bars */
+@keyframes bar-grow {
+  from { height: 0; }
+}
+
+.animate-bar-grow {
+  animation: bar-grow 0.8s ease-out forwards;
+}
+
+/* Slide down — for carry over badge */
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.4s ease-out forwards;
+}
+
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+.stagger-6 { animation-delay: 0.3s; }
+.stagger-7 { animation-delay: 0.35s; }
+
+.glass-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glass-hover:hover {
+  border-color: hsl(var(--border));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.32), 0 1px 0 rgba(var(--glass-bg), 0.06) inset;
+}
+
+/* Light theme glass-hover adjustment */
+[data-theme="light"] .glass-hover:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10), 0 1px 0 rgba(0, 0, 0, 0.03) inset;
+}
+
+.neon-border {
+  position: relative;
+}
+.neon-border::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(var(--theme-glow), 0.3), transparent 40%, transparent 60%, rgba(var(--theme-glow), 0.15));
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}

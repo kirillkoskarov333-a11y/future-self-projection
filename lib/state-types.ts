@@ -44,6 +44,7 @@ export interface BudgetState {
   incomeHistory: import("@/lib/types").IncomeEntry[]
   expenses: import("@/lib/types").ExpenseEntry[]
   deposits: import("@/lib/types").Deposit[]
+  savingsGoals?: import("@/lib/types").SavingsGoal[]
 }
 
 export interface LearningState {

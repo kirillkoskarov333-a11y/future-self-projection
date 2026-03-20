@@ -255,6 +255,24 @@ export interface Deposit {
   createdAt: string
 }
 
+// === Savings Goal (smart accumulation with adaptive recommendations) ===
+
+export interface EarningEntry {
+  id: string
+  amount: number
+  date: string  // ISO date
+}
+
+export interface SavingsGoal {
+  id: string
+  name: string
+  targetAmount: number       // целевая сумма (например 350000)
+  deadline: string           // дедлайн (ISO date)
+  workDaysPerWeek: number    // начальный план дней работы в неделю
+  earnings: EarningEntry[]   // лог заработков по дням
+  createdAt: string
+}
+
 export const IMPORTANCE_LABELS: Record<ImportanceLevel, string> = {
   4: "Критический",
   3: "Высокий",

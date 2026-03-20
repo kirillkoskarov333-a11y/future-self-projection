@@ -1,0 +1,10 @@
+dist-desktop
+build
+electron
+data
+scripts
+docs
+*.vbs
+*.ico
+dev-server.log
+tsconfig.tsbuildinfo

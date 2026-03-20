@@ -310,6 +310,9 @@ export function isBudgetState(value: unknown): value is BudgetState {
     return false
   if (value.deposits !== undefined && (!Array.isArray(value.deposits) || !value.deposits.every(isDeposit)))
     return false
+  // savingsGoals is optional for backwards compat
+  if (value.savingsGoals !== undefined && !Array.isArray(value.savingsGoals))
+    return false
   return true
 }
 
