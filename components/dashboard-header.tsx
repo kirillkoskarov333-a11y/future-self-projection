@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, Target } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { MONTH_NAMES } from "@/lib/types"
 import { ThemeSwitcher } from "@/components/theme-switcher"
+import { AuthButton } from "@/components/auth-button"
 
 interface DashboardHeaderProps {
   currentMonth: number
@@ -40,6 +41,7 @@ export function DashboardHeader({
       </div>
 
       <div className="flex items-center gap-4">
+        <AuthButton />
         <ThemeSwitcher />
         <div className="flex items-center gap-2">
           <Button
