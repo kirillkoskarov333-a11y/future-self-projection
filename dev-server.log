@@ -1,0 +1,15 @@
+
+> future-self-projection-desktop@0.1.0 dev
+> next dev --turbo
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.167:3000
+
+✓ Starting...
+Creating turbopack project {
+  dir: 'C:\\Users\\kirill\\.vscode\\future-self-projection',
+  testMode: true
+}
+✓ Ready in 1113ms
+○ Compiling / ...
