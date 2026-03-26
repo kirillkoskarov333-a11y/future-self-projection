@@ -16,6 +16,7 @@ export function AuthButton() {
   const [isSignUp, setIsSignUp] = useState(false)
   const [error, setError] = useState("")
   const [message, setMessage] = useState("")
+  const [syncMsg, setSyncMsg] = useState("") // sync feedback message
 
   // Check current session on mount
   useEffect(() => {
@@ -31,17 +32,38 @@ export function AuthButton() {
     return () => { listener.subscription.unsubscribe() }
   }, [])
 
+  // Auto-sync: pull from cloud when page becomes visible (user opens app/tab)
+  useEffect(() => {
+    if (!user) return
+    if (typeof window === "undefined") return
+
+    // Sync once on mount (when app opens)
+    handleSync()
+
+    // Sync when user returns to the tab/app
+    const onVisible = () => {
+      if (document.visibilityState === "visible") {
+        console.log("[sync] Page visible — auto-syncing from cloud")
+        handleSync()
+      }
+    }
+    document.addEventListener("visibilitychange", onVisible)
+
+    return () => document.removeEventListener("visibilitychange", onVisible)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
+
   // Sync after login
   const handleSync = useCallback(async () => {
     setSyncing(true)
     try {
-      const changed = await syncFromCloud()
-      if (changed) {
+      const result = await syncFromCloud()
+      if (result === "pulled") {
         // Data was updated from cloud — reload page to refresh all hooks
         window.location.reload()
       }
-    } catch {
-      // Sync failed silently
+    } catch (err) {
+      console.error("[sync] Sync failed:", err)
     }
     setSyncing(false)
   }, [])
@@ -83,15 +105,20 @@ export function AuthButton() {
     setUser(null)
   }
 
-  // Manual sync button
+  // Manual sync button — push local data then pull cloud data
   const handleManualSync = async () => {
     setSyncing(true)
     try {
       await pushAllToCloud()
-      const changed = await syncFromCloud()
-      if (changed) window.location.reload()
-    } catch {
-      // ignore
+      const result = await syncFromCloud()
+      if (result === "pulled") window.location.reload()
+      // Show brief success feedback
+      setSyncMsg("Синхронизировано!")
+      setTimeout(() => setSyncMsg(""), 2000)
+    } catch (err) {
+      console.error("[sync] Manual sync failed:", err)
+      setSyncMsg("Ошибка синхронизации")
+      setTimeout(() => setSyncMsg(""), 3000)
     }
     setSyncing(false)
   }
@@ -100,6 +127,12 @@ export function AuthButton() {
   if (user) {
     return (
       <div className="flex items-center gap-2">
+        {/* Sync feedback message */}
+        {syncMsg && (
+          <span className={`text-xs font-medium ${syncMsg.includes("Ошибка") ? "text-destructive" : "text-primary"}`}>
+            {syncMsg}
+          </span>
+        )}
         <button
           onClick={handleManualSync}
           disabled={syncing}
